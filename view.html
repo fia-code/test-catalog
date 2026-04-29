@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CLINIQ - Request Detail</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #ffffff;
+      font-size: 13px;
+    }
+
+    .top-navbar {
+      background-color: #5d77a6;
+      height: 52px;
+      display: flex;
+      align-items: center;
+      padding: 0 14px;
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+    }
+    .navbar-brand {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      color: #ffffff;
+      font-size: 1.2rem;
+      font-weight: 800;
+      letter-spacing: 2px;
+      width: 200px;
+      flex-shrink: 0;
+    }
+    .navbar-brand img {
+      height: 28px; width: 28px;
+      object-fit: contain;
+      filter: brightness(0) invert(1);
+    }
+    .search-display {
+      width: 100%;
+      height: 32px;
+      border-radius: 20px;
+      background: #ffffff;
+    }
+
+    .sidebar {
+      position: fixed;
+      top: 52px; left: 0;
+      width: 200px;
+      height: calc(100vh - 52px);
+      background-color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      z-index: 99;
+      border-right: 1px solid #6882b0;
+    }
+    .user-card {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 14px 12px 12px;
+      background: #5d77a6;
+      border-radius: 10px;
+      padding: 9px 11px;
+    }
+    .user-avatar {
+      background: #ffffff;
+      color: #5d77a6;
+      font-weight: 700;
+      font-size: 0.78rem;
+      width: 36px; height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .user-name { color: #ffffff; font-weight: 600; font-size: 0.78rem; line-height: 1.3; }
+    .user-role { color: rgba(255,255,255,0.75); font-size: 0.67rem; }
+
+    .nav-section-pill {
+      display: inline-block;
+      background: #5873a1;
+      color: #ffffff;
+      font-size: 0.72rem;
+      font-weight: 700;
+      border-radius: 20px;
+      padding: 3px 14px;
+      margin: 8px 12px 4px;
+    }
+    .nav-link-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 16px;
+      color: #5873a1;
+      font-size: 0.78rem;
+      font-weight: 500;
+      text-decoration: none;
+      transition: background 0.12s;
+    }
+    .nav-link-item:hover { background: #ffffff; color: #5873a1; }
+
+    .sign-out-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 10px 12px 6px;
+      background: #5873a1;
+      border-radius: 20px;
+      padding: 7px 14px;
+      color: #ffffff;
+      font-size: 0.78rem;
+      font-weight: 600;
+      text-decoration: none;
+      width: fit-content;
+    }
+    .sign-out-btn:hover { background: #4a629a; color: #ffffff; }
+
+    .sidebar-logo-bottom {
+      margin-top: auto;
+      display: flex;
+      justify-content: center;
+      padding: 16px 0 18px;
+    }
+    .sidebar-logo-bottom img { height: 60px; width: 60px; object-fit: contain; }
+
+    .main-wrapper {
+      margin-left: 200px;
+      margin-top: 52px;
+      padding: 36px 40px;
+      min-height: calc(100vh - 52px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .request-card {
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 34px 40px 30px;
+      width: 100%;
+      max-width: 900px;       
+      box-shadow: 0 2px 20px rgba(0,0,0,0.08);
+    }
+
+    .card-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 4px;
+    }
+    .req-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #000000;
+    }
+    .req-submitted {
+      font-size: 0.72rem;
+      color: #000000;
+      margin-top: 3px;
+    }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .badge-processing {
+      background: #7ed6e8;
+      color: #1800ad;
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 5px 16px;
+      border-radius: 20px;
+    }
+    .btn-x {
+      width: 28px; height: 28px;
+      border: 1.5px solid #545454;
+      border-radius: 50%;
+      background: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.95rem;
+      color: #545454;
+      cursor: pointer;
+    }
+    .btn-x:hover { background: #ffffff; }
+
+    .info-grid {
+      background: #7e98c5;
+      border-radius: 10px;
+      padding: 16px 20px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px 24px;
+      margin: 18px 0;
+    }
+    .info-field label {
+      font-size: 0.67rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #545454;
+      display: block;
+      margin-bottom: 5px;
+    }
+    .field-value {
+      background: #ffffff;
+      border: 1px solid #dde2ef;
+      border-radius: 6px;
+      padding: 7px 12px;
+      font-size: 0.82rem;
+      color: #000000;
+      font-weight: 500;
+      cursor: pointer;
+    }
+    .field-value:hover { border-color: #5d77a6; }
+
+    .field-edit-input,
+    .field-edit-select {
+      background: #ffffff;
+      border: 1px solid #5d77a6;
+      border-radius: 6px;
+      padding: 7px 12px;
+      font-size: 0.82rem;
+      color: #000000;
+      font-weight: 500;
+      font-family: 'Poppins', sans-serif;
+      width: 100%;
+      outline: none;
+    }
+
+    .section-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: #545454;
+      margin-bottom: 9px;
+    }
+
+    .test-badge {
+      display: inline-block;
+      padding: 5px 16px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      margin-right: 6px;
+    }
+    .badge-cbc        { background: #6082b6; color: #ffffff; }
+    .badge-urinalysis { background: #6082b6; color: #ffffff; }
+    .badge-lipid      { background: #6082b6; color: #ffffff; }
+
+    .notes-box {
+      background: #ffde59;
+      border: 1px solid #ffde59;
+      border-radius: 7px;
+      padding: 10px 14px;
+      font-size: 0.8rem;
+      color: #000000;
+      margin: 12px 0 18px;
+      cursor: pointer;
+    }
+    .notes-box:hover { border-color: #e6c800; }
+
+    .notes-edit-textarea {
+      background: #ffde59;
+      border: 1px solid #5d77a6;
+      border-radius: 7px;
+      padding: 10px 14px;
+      font-size: 0.8rem;
+      color: #000000;
+      font-family: 'Poppins', sans-serif;
+      width: 100%;
+      min-height: 58px;
+      resize: vertical;
+      outline: none;
+      margin: 12px 0 6px;
+      display: block;
+    }
+    .notes-action-row {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+    .btn-notes-cancel {
+      background: #d3d3d3;
+      color: #545454;
+      border: none;
+      border-radius: 8px;
+      padding: 5px 14px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 500;
+      cursor: pointer;
+    }
+    .btn-notes-save {
+      background: #5d77a6;
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      padding: 5px 14px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .processing-list {
+      list-style: none;
+      padding: 0;
+      margin: 10px 0 26px;
+    }
+    .processing-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .step-dot {
+      width: 13px; height: 13px;
+      border-radius: 50%;
+      margin-top: 3px;
+      flex-shrink: 0;
+    }
+    .dot-done    { background: #6cc22c; }
+    .dot-active  { background: #4a7ff7; }
+    .dot-pending { background: #a6a6a6; }
+
+    .step-title {
+      font-weight: 600;
+      font-size: 0.8rem;
+      color: #000000;
+    }
+    .step-title.muted { color: #545454; }
+    .step-sub {
+      font-size: 0.7rem;
+      color: #545454;
+      margin-top: 1px;
+    }
+
+    .card-footer-btns {
+      display: flex;
+      gap: 14px;
+    }
+    .btn-close-gray {
+      flex: 1;
+      background: #d3d3d3;
+      color: #545454;
+      border: none;
+      border-radius: 8px;
+      padding: 11px 0;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.86rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .btn-close-gray:hover { background: #d3d3d3; }
+    .btn-complete {
+      flex: 1.5;
+      background: #36c637;
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      padding: 11px 0;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.86rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      transition: background 0.15s;
+    }
+    .btn-complete:hover { background: #36c637; }
+
+    .confirm-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.35);
+      z-index: 9998;
+      align-items: center;
+      justify-content: center;
+    }
+    .confirm-modal.open { display: flex; }
+    .confirm-box {
+      background: #fff;
+      border-radius: 12px;
+      padding: 32px 36px;
+      max-width: 320px;
+      width: 90%;
+      text-align: center;
+      font-family: 'Poppins', sans-serif;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    }
+    .confirm-box h6 { font-size: 0.95rem; font-weight: 700; color: #222; margin-bottom: 8px; }
+    .confirm-box p  { font-size: 0.78rem; color: #666; margin-bottom: 22px; }
+    .confirm-actions { display: flex; gap: 10px; justify-content: center; }
+    .confirm-actions button {
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 24px;
+      cursor: pointer;
+    }
+    .btn-modal-cancel  { background: #eee; color: #555; }
+    .btn-modal-confirm { background: #36c637; color: #fff; }
+    .btn-modal-close   { background: #5873a1; color: #fff; }
+  </style>
+</head>
+<body>
+
+<div class="top-navbar">
+  <div class="navbar-brand">
+    <img src="logo.png" alt="logo"/>
+    CLINIQ
+  </div>
+  <div class="flex-grow-1 px-2">
+    <div class="search-display"></div>
+  </div>
+</div>
+
+<div class="sidebar">
+  <div class="user-card">
+    <div class="user-avatar">MC</div>
+    <div>
+      <div class="user-name">Curitana, MC</div>
+      <div class="user-role">Lab Administrator</div>
+    </div>
+  </div>
+
+  <span class="nav-section-pill">Overview</span>
+  <a href="#" class="nav-link-item">
+    <img src="business.png" alt="" style="width:16px;height:16px;"> Dashboard
+  </a>
+
+  <span class="nav-section-pill">Management</span>
+  <a href="#" class="nav-link-item">
+    <img src="search.png" alt="" style="width:16px;height:16px;"> Test Catalog
+  </a>
+  <a href="#" class="nav-link-item">
+    <img src="flask.png" alt="" style="width:16px;height:16px;"> Lab Request
+  </a>
+  <a href="#" class="nav-link-item">
+    <img src="invoice.png" alt="" style="width:16px;height:16px;"> Billing
+  </a>
+
+  <span class="nav-section-pill">Reports</span>
+  <a href="#" class="nav-link-item">
+    <img src="analysis.png" alt="" style="width:16px;height:16px;"> Analytics
+  </a>
+
+  <a href="#" class="sign-out-btn">
+    <img src="logout.png" alt="" style="width:16px;height:16px;filter:brightness(0) invert(1);"> Sign Out
+  </a>
+
+  <div class="sidebar-logo-bottom">
+    <img src="logo.png" alt="logo"/>
+  </div>
+</div>
+
+<div class="main-wrapper">
+  <div class="request-card" id="requestCard">
+
+    <div class="card-top">
+      <div>
+        <div class="req-title">Request detail – #REQ-2410</div>
+        <div class="req-submitted">Submitted: Apr 9, 2026 · 8:02 AM</div>
+      </div>
+      <div class="header-right">
+        <span class="badge-processing" id="statusBadge">Processing</span>
+        <button class="btn-x" id="btnX"><i class="bi bi-x"></i></button>
+      </div>
+    </div>
+
+    <div class="info-grid">
+      <div class="info-field">
+        <label>Patient</label>
+        <div class="field-value" id="fv-patient" onclick="startEdit('patient','text')">Curitana, Maria Antoinette C.</div>
+      </div>
+      <div class="info-field">
+        <label>Priority</label>
+        <div class="field-value" id="fv-priority" onclick="startEdit('priority','select')">STAT</div>
+      </div>
+      <div class="info-field">
+        <label>Physician</label>
+        <div class="field-value" id="fv-physician" onclick="startEdit('physician','text')">Dr. Katarina Yu, MD</div>
+      </div>
+      <div class="info-field">
+        <label>Chart No.</label>
+        <div class="field-value" id="fv-chart" onclick="startEdit('chart','text')">PT-19920714-055</div>
+      </div>
+    </div>
+
+    <div class="section-label">Tests Ordered</div>
+    <div class="mb-3">
+      <span class="test-badge badge-cbc">CBC</span>
+      <span class="test-badge badge-urinalysis">Urinalysis</span>
+      <span class="test-badge badge-lipid">Lipid Panel</span>
+    </div>
+
+    <div class="section-label">Priority &amp; Notes</div>
+    <div class="notes-box" id="notesDisplay" onclick="editNotes()">
+      *Chest pain workup. Stat labs requested by ER. Obtain results ASAP.
+    </div>
+    <textarea class="notes-edit-textarea" id="notesEditor" style="display:none;"></textarea>
+    <div class="notes-action-row" id="notesActions" style="display:none;">
+      <button class="btn-notes-cancel" onclick="cancelNotes()">Cancel</button>
+      <button class="btn-notes-save" onclick="saveNotes()">Save</button>
+    </div>
+
+    <div class="section-label">Processing Time</div>
+    <ul class="processing-list">
+      <li>
+        <div class="step-dot dot-done"></div>
+        <div>
+          <div class="step-title">Request received</div>
+          <div class="step-sub">Apr 9, 2026, 8:02 AM</div>
+        </div>
+      </li>
+      <li>
+        <div class="step-dot dot-active" id="dot1"></div>
+        <div>
+          <div class="step-title" id="step1title">Processing in progress</div>
+          <div class="step-sub" id="step1sub">Assigned to Jose Rizal, RMT · EST. TAT: 4h</div>
+        </div>
+      </li>
+      <li>
+        <div class="step-dot dot-pending" id="dot2"></div>
+        <div>
+          <div class="step-title muted" id="step2title">Results ready – pending</div>
+          <div class="step-sub" id="step2sub"></div>
+        </div>
+      </li>
+    </ul>
+
+    <div class="card-footer-btns">
+      <button class="btn-close-gray" id="btnClose">Close</button>
+      <button class="btn-complete" id="btnComplete" onclick="markComplete()">
+        <i class="bi bi-check-lg"></i> Mark as Completed
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<div class="confirm-modal" id="closeModal">
+  <div class="confirm-box">
+    <h6>Close this request?</h6>
+    <p>Any unsaved changes will be lost.</p>
+    <div class="confirm-actions">
+      <button class="btn-modal-cancel" id="closeModalCancel">Cancel</button>
+      <button class="btn-modal-close"  id="closeModalConfirm">Close Request</button>
+    </div>
+  </div>
+</div>
+
+<div class="confirm-modal" id="completeModal">
+  <div class="confirm-box">
+    <h6>Mark as Completed?</h6>
+    <p>This will finalize #REQ-2410 and make results available for download.</p>
+    <div class="confirm-actions">
+      <button class="btn-modal-cancel"  id="completeModalCancel">Cancel</button>
+      <button class="btn-modal-confirm" id="completeModalConfirm">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+
+  function startEdit(field, type) {
+    const fv = document.getElementById('fv-' + field);
+    const current = fv.textContent.trim();
+    fv.onclick = null;
+
+    if (type === 'select') {
+      const sel = document.createElement('select');
+      sel.className = 'field-edit-select';
+      ['STAT', 'Routine', 'Urgent'].forEach(opt => {
+        const o = document.createElement('option');
+        o.value = opt; o.textContent = opt;
+        if (opt === current) o.selected = true;
+        sel.appendChild(o);
+      });
+      fv.textContent = '';
+      fv.appendChild(sel);
+      sel.focus();
+      sel.onblur = () => commitField(fv, sel.value, field, type);
+    } else {
+      const inp = document.createElement('input');
+      inp.type = 'text';
+      inp.className = 'field-edit-input';
+      inp.value = current;
+      fv.textContent = '';
+      fv.appendChild(inp);
+      inp.focus();
+      inp.select();
+      inp.onblur   = () => commitField(fv, inp.value.trim() || current, field, type);
+      inp.onkeydown = e => {
+        if (e.key === 'Enter')  inp.blur();
+        if (e.key === 'Escape') commitField(fv, current, field, type);
+      };
+    }
+  }
+
+  function commitField(fv, value, field, type) {
+    fv.textContent = value;
+    fv.onclick = () => startEdit(field, type);
+  }
+
+  function editNotes() {
+    const display = document.getElementById('notesDisplay');
+    const editor  = document.getElementById('notesEditor');
+    const actions = document.getElementById('notesActions');
+    editor.value          = display.textContent.trim();
+    display.style.display = 'none';
+    editor.style.display  = 'block';
+    actions.style.display = 'flex';
+    editor.focus();
+  }
+
+  function saveNotes() {
+    const display = document.getElementById('notesDisplay');
+    const editor  = document.getElementById('notesEditor');
+    const actions = document.getElementById('notesActions');
+    display.textContent   = editor.value.trim() || display.textContent.trim();
+    display.style.display = 'block';
+    editor.style.display  = 'none';
+    actions.style.display = 'none';
+  }
+
+  function cancelNotes() {
+    document.getElementById('notesDisplay').style.display = 'block';
+    document.getElementById('notesEditor').style.display  = 'none';
+    document.getElementById('notesActions').style.display = 'none';
+  }
+
+  function markComplete() {
+    document.getElementById('completeModal').classList.add('open');
+  }
+
+  function doMarkComplete() {
+    const badge = document.getElementById('statusBadge');
+    badge.textContent       = 'Completed';
+    badge.style.background  = '#d4f5d4';
+    badge.style.color       = '#1a7a1a';
+
+    document.getElementById('dot1').classList.replace('dot-active', 'dot-done');
+    document.getElementById('dot2').classList.replace('dot-pending', 'dot-active');
+    document.getElementById('step1title').textContent = 'Processing complete';
+    const s2t = document.getElementById('step2title');
+    s2t.textContent = 'Results ready';
+    s2t.classList.remove('muted');
+    const now = new Date();
+    document.getElementById('step2sub').textContent =
+      now.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' }) +
+      ', ' + now.toLocaleTimeString('en-US', { hour:'2-digit', minute:'2-digit' });
+
+    const btn = document.getElementById('btnComplete');
+    btn.disabled       = true;
+    btn.style.opacity  = '0.6';
+    btn.style.cursor   = 'not-allowed';
+  }
+
+  function openCloseModal() {
+    document.getElementById('closeModal').classList.add('open');
+  }
+
+  function doClose() {
+    document.getElementById('requestCard').style.display = 'none';
+    document.getElementById('closeModal').classList.remove('open');
+  }
+
+  document.getElementById('btnX').addEventListener('click', openCloseModal);
+  document.getElementById('btnClose').addEventListener('click', openCloseModal);
+
+  document.getElementById('closeModalCancel').addEventListener('click', () => {
+    document.getElementById('closeModal').classList.remove('open');
+  });
+  document.getElementById('closeModalConfirm').addEventListener('click', doClose);
+
+  document.getElementById('closeModal').addEventListener('click', function(e) {
+    if (e.target === this) this.classList.remove('open');
+  });
+
+  document.getElementById('completeModalCancel').addEventListener('click', () => {
+    document.getElementById('completeModal').classList.remove('open');
+  });
+
+  document.getElementById('completeModalConfirm').addEventListener('click', () => {
+    document.getElementById('completeModal').classList.remove('open');
+    doMarkComplete();
+  });
+
+  document.getElementById('completeModal').addEventListener('click', function(e) {
+    if (e.target === this) this.classList.remove('open');
+  });
+
+</script>
+</body>
+</html>

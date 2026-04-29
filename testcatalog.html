@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CLINIQ - Test Catalogue</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="cliniq_catalogue.css"/>
+</head>
+<body>
+
+<div class="top-navbar">
+  <div class="navbar-brand">
+    <img src="logo.png" alt="logo"/>
+    CLINIQ
+  </div>
+  <div class="navbar-search">
+    <div class="search-display"></div>
+  </div>
+</div>
+
+<div class="sidebar">
+  <div class="user-card">
+    <div class="user-avatar">MC</div>
+    <div>
+      <div class="user-name">Curitana, MC</div>
+      <div class="user-role">Lab Administrator</div>
+    </div>
+  </div>
+  <span class="nav-section-pill">Overview</span>
+  <a href="#" class="nav-link-item"><img src="business.png" alt="dashboard icon" style="width:16px; height:16px;"> Dashboard</a>
+  <span class="nav-section-pill">Management</span>
+  <a href="#" class="nav-link-item"><img src="search.png" alt="dashboard icon" style="width:16px; height:16px;"> Test Catalog</a>
+  <a href="#" class="nav-link-item"><img src="flask.png" alt="dashboard icon" style="width:16px; height:16px;"> Lab Request</a>
+  <a href="#" class="nav-link-item"><img src="invoice.png" alt="dashboard icon" style="width:16px; height:16px;"> Billing</a>
+  <span class="nav-section-pill">Reports</span>
+  <a href="#" class="nav-link-item"><img src="analysis.png" alt="dashboard icon" style="width:16px; height:16px;"> Analytics</a>
+  <a href="#" class="sign-out-btn">
+    <img src="logout.png" alt="sign out" style="width:16px; height:16px; filter: brightness(0) invert(1);"> Sign Out
+  </a>
+  <div class="sidebar-logo-bottom">
+    <img src="logo.png" alt="logo"/>
+  </div>
+</div>
+
+<div class="main-wrapper">
+  <div class="page-header">
+    <div>
+      <div class="page-title">Test Catalogue</div>
+      <div class="page-subtitle">Manage diagnostic tests, pricing, and turnaround times</div>
+    </div>
+    <div class="d-flex gap-2">
+      <button class="btn-export-csv" onclick="exportCSV()">Export CSV</button>
+      <button class="btn-print-batch" onclick="printBatch()">Print Batch</button>
+    </div>
+  </div>
+
+  <div class="filter-bar">
+    <div class="search-wrap">
+      <i class="bi bi-search"></i>
+      <input type="text" placeholder="Search test by name or code...." oninput="filterSearch(this.value)"/>
+    </div>
+    <div class="dropdown-wrap">
+      <button class="filter-dropdown" id="btnPriority" onclick="toggleDropdown('ddPriority')">All Priorities <i class="bi bi-chevron-down"></i></button>
+      <div class="dropdown-menu-custom" id="ddPriority">
+        <button class="selected" onclick="selectPriority(this, 'All Priorities')">All Priorities</button>
+        <button onclick="selectPriority(this, 'STAT')">STAT</button>
+        <button onclick="selectPriority(this, 'Urgent')">Urgent</button>
+        <button onclick="selectPriority(this, 'Routine')">Routine</button>
+      </div>
+    </div>
+    <div class="dropdown-wrap">
+      <button class="filter-dropdown" id="btnDate" onclick="toggleDropdown('ddDate')">Today <i class="bi bi-chevron-down"></i></button>
+      <div class="dropdown-menu-custom" id="ddDate">
+        <button class="selected" onclick="selectDate(this, 'Today')">Today</button>
+        <button onclick="selectDate(this, 'This Week')">This Week</button>
+        <button onclick="selectDate(this, 'This Month')">This Month</button>
+        <button onclick="selectDate(this, 'All Time')">All Time</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="table-card">
+    <table id="mainTable">
+      <thead>
+        <tr>
+          <th>Req, ID</th>
+          <th>Submitted</th>
+          <th>Patient</th>
+          <th>Priority</th>
+          <th>Status</th>
+          <th>TAT Left</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><a href="#" class="req-id-link">REQ-26-0001</a></td>
+          <td>Apr 9, 8:02 AM</td>
+          <td class="td-patient">
+            <div class="patient-main">Curitana, Maria Antoinette</div>
+            <div class="patient-sub">PT-20260001</div>
+          </td>
+          <td><span class="priority-text">CBC, UA, LIPID</span></td>
+          <td><span class="sts-stat">STAT</span></td>
+          <td><span class="tat-pending">Pending</span></td>
+          <td><div class="actions-wrap">
+            <button class="act-start" onclick="handleStart(this)">Start</button>
+            <button class="act-view" onclick="handleView(this)">View</button>
+          </div></td>
+        </tr>
+        <tr>
+          <td><a href="#" class="req-id-link">REQ-26-0002</a></td>
+          <td>Apr 9, 8:02 AM</td>
+          <td class="td-patient">
+            <div class="patient-main">Yu, Katarina</div>
+            <div class="patient-sub">PT-0000002</div>
+          </td>
+          <td><span class="priority-text">CBC, UA, LIPID</span></td>
+          <td><span class="sts-urgent">Urgent</span></td>
+          <td><span class="tat-processing">Processing</span></td>
+          <td><div class="actions-wrap">
+            <button class="act-complete" onclick="handleComplete(this)">Complete</button>
+            <button class="act-view" onclick="handleView(this)">View</button>
+          </div></td>
+        </tr>
+        <tr>
+          <td><a href="#" class="req-id-link">REQ-26-0003</a></td>
+          <td>Apr 9, 8:02 AM</td>
+          <td class="td-patient">
+            <div class="patient-main">Kim, Jennie Rubyjane</div>
+            <div class="patient-sub">PY-0000003</div>
+          </td>
+          <td><span class="priority-text">CBC, UA, LIPID</span></td>
+          <td><span class="sts-routine">Routine</span></td>
+          <td><span class="tat-pending">Pending</span></td>
+          <td><div class="actions-wrap">
+            <button class="act-start" onclick="handleStart(this)">Start</button>
+            <button class="act-view" onclick="handleView(this)">View</button>
+          </div></td>
+        </tr>
+        <tr>
+          <td><a href="#" class="req-id-link">REQ-26-0004</a></td>
+          <td>Apr 9, 8:02 AM</td>
+          <td class="td-patient">
+            <div class="patient-main">Hwang, Yeji</div>
+            <div class="patient-sub">PT-0000004</div>
+          </td>
+          <td><span class="priority-text">CBC, UA, LIPID</span></td>
+          <td><span class="sts-stat">STAT</span></td>
+          <td><span class="tat-completed">Completed</span></td>
+          <td><div class="actions-wrap">
+            <button class="act-pdf" onclick="handlePdf(this)">PDF <i class="bi bi-download"></i></button>
+          </div></td>
+        </tr>
+        <tr>
+          <td><a href="#" class="req-id-link">REQ-26-0005</a></td>
+          <td>Apr 9, 8:02 AM</td>
+          <td class="td-patient">
+            <div class="patient-main">Pattrinite, Love</div>
+            <div class="patient-sub">PT-0000005</div>
+          </td>
+          <td><span class="priority-text">CBC, UA, LIPID</span></td>
+          <td><span class="sts-urgent">Urgent</span></td>
+          <td><span class="tat-completed">Completed</span></td>
+          <td><div class="actions-wrap">
+            <button class="act-pdf" onclick="handlePdf(this)">PDF <i class="bi bi-download"></i></button>
+          </div></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="pagination-row">
+      <span id="pageLabel">Showing 1 of 12 tests</span>
+      <div class="pg-btns">
+        <button class="pg-btn" onclick="changePage(null, -1)"><i class="bi bi-chevron-left" style="font-size:0.65rem;"></i></button>
+        <button class="pg-btn active" onclick="changePage(this)">1</button>
+        <button class="pg-btn" onclick="changePage(this)">2</button>
+        <button class="pg-btn" onclick="changePage(this)">3</button>
+        <button class="pg-btn" onclick="changePage(null, 1)"><i class="bi bi-chevron-right" style="font-size:0.65rem;"></i></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast-msg" id="toast"></div>
+
+<div class="cliniq-overlay" id="startOverlay">
+  <div class="cliniq-overlay-inner">
+    <div id="startModal">
+      <button class="sm-close-btn" onclick="closeStartModal()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+
+      <div class="sm-title">Start Processing &ndash; #REQ-2026001</div>
+      <div class="sm-sub">Confirm details before marking as In Progress</div>
+
+      <div class="patient-card">
+        <div class="field">
+          <label>Patient</label>
+          <input class="field-input" id="smPatient" type="text" value="Curitana, Maria Antoinette C."/>
+          <div class="error-msg" id="smErrPatient">Patient name is required.</div>
+        </div>
+        <div class="field">
+          <label>Date of Birth</label>
+          <input class="field-input" id="smDob" type="text" value="Jul 14, 1992"/>
+          <div class="error-msg" id="smErrDob">Date of birth is required.</div>
+        </div>
+        <div class="field">
+          <label>Chart No.</label>
+          <input class="field-input mono" id="smChart" type="text" value="PT-19920714-055"/>
+          <div class="error-msg" id="smErrChart">Chart number is required.</div>
+        </div>
+        <div class="field">
+          <label>Sex</label>
+          <select class="field-input" id="smSex" style="cursor:pointer;">
+            <option value="FEMALE" selected>FEMALE</option>
+            <option value="MALE">MALE</option>
+            <option value="OTHER">OTHER</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Physician</label>
+          <input class="field-input" id="smPhysician" type="text" value="Dr. Katarina Yu, MD"/>
+          <div class="error-msg" id="smErrPhysician">Physician name is required.</div>
+        </div>
+        <div class="field">
+          <label>Specimen</label>
+          <select class="field-input" id="smSpecimen" style="cursor:pointer;">
+            <option value="Whole Blood" selected>Whole Blood</option>
+            <option value="Serum">Serum</option>
+            <option value="Plasma">Plasma</option>
+            <option value="Urine">Urine</option>
+            <option value="Swab">Swab</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="sec-label">Tests Ordered</div>
+      <div class="tags" id="smTags">
+        <span class="tag" data-name="CBC">CBC <span class="tag-remove" onclick="this.closest('.tag').remove()">✕</span></span>
+        <span class="tag" data-name="Urinalysis">Urinalysis <span class="tag-remove" onclick="this.closest('.tag').remove()">✕</span></span>
+        <span class="tag" data-name="Lipid Panel">Lipid Panel <span class="tag-remove" onclick="this.closest('.tag').remove()">✕</span></span>
+        <button class="tag-add" id="smTagAddBtn" onclick="smShowTagInput()">+ Add Test</button>
+        <div class="tag-input-wrap" id="smTagInputWrap" style="display:none;">
+          <input class="tag-input" id="smTagInputField" type="text" placeholder="Test name…" onkeydown="smTagKeydown(event)"/>
+          <button class="tag-input-btn" onclick="smAddTag()">Add</button>
+        </div>
+      </div>
+      <div class="error-msg" id="smErrTags" style="margin-bottom:8px;">At least one test must be ordered.</div>
+
+      <div class="sec-label" style="margin-top:4px;">Priority &amp; Notes</div>
+      <div class="priority-row">
+        <span class="badge-stat">STAT</span>
+        <span class="priority-time">Submitted Apr 9, 2026 &middot; 8:02</span>
+      </div>
+      <div class="note-box">
+        <textarea class="note-textarea" id="smNote" rows="2">*Chest pain workup. Stat labs requested by ER.</textarea>
+      </div>
+
+      <div class="sec-label">Assign to Technician</div>
+      <div class="select-wrap">
+        <select class="tech-select" id="smTech">
+          <option value="">— Select technician —</option>
+          <option value="Winter Kim, RMT" selected>Winter Kim, RMT</option>
+          <option value="Alex Santos, RMT">Alex Santos, RMT</option>
+          <option value="Jenna Reyes, RMT">Jenna Reyes, RMT</option>
+          <option value="Marco Dela Cruz, RMT">Marco Dela Cruz, RMT</option>
+        </select>
+        <span class="select-arrow">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </span>
+      </div>
+      <div class="error-msg" id="smErrTech" style="margin-top:-20px; margin-bottom:14px;">Please assign a technician.</div>
+
+      <div class="sm-actions">
+        <button class="sm-btn sm-btn-cancel" onclick="closeStartModal()">Cancel</button>
+        <button class="sm-btn sm-btn-confirm" onclick="smHandleConfirm()">Confirm – Mark as Processing</button>
+      </div>
+      <div class="confirm-overlay" id="smSuccessOverlay">
+        <div class="confirm-check">
+          <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <div class="confirm-title">Marked as Processing!</div>
+        <div class="confirm-sub" id="smSuccessSub">REQ-2026001 has been assigned.</div>
+        <button class="confirm-close-btn" onclick="smDone()">Done</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="cliniq-overlay" id="viewOverlay">
+  <div class="cliniq-overlay-inner">
+    <div id="viewModal">
+      <div class="vcard-top">
+        <div>
+          <div class="vreq-title">Request detail – #REQ-2410</div>
+          <div class="vreq-submitted">Submitted: Apr 9, 2026 · 8:02 AM</div>
+        </div>
+        <div class="vheader-right">
+          <span class="vbadge-processing" id="vStatusBadge">Processing</span>
+          <button class="vbtn-x" onclick="closeViewModal()">&#x2715;</button>
+        </div>
+      </div>
+
+      <div class="vinfo-grid">
+        <div class="vinfo-field"><label>Patient</label><div class="vfield-value" id="vPatientName">Curitana, Maria Antoinette C.</div></div>
+        <div class="vinfo-field"><label>Priority</label><div class="vfield-value">STAT</div></div>
+        <div class="vinfo-field"><label>Physician</label><div class="vfield-value">Dr. Katarina Yu, MD</div></div>
+        <div class="vinfo-field"><label>Chart No.</label><div class="vfield-value">PT-19920714-055</div></div>
+      </div>
+
+      <div class="vsection-label">Tests Ordered</div>
+      <div style="margin-bottom:12px;">
+        <span class="vtest-badge">CBC</span>
+        <span class="vtest-badge">Urinalysis</span>
+        <span class="vtest-badge">Lipid Panel</span>
+      </div>
+
+      <div class="vsection-label">Priority &amp; Notes</div>
+      <div class="vnotes-box">*Chest pain workup. Stat labs requested by ER. Obtain results ASAP.</div>
+
+      <div class="vsection-label">Processing Time</div>
+      <ul class="vprocessing-list">
+        <li>
+          <div class="vstep-dot dot-done"></div>
+          <div><div class="vstep-title">Request received</div><div class="vstep-sub">Apr 9, 2026, 8:02 AM</div></div>
+        </li>
+        <li>
+          <div class="vstep-dot dot-active" id="vDot1"></div>
+          <div>
+            <div class="vstep-title" id="vStep1Title">Processing in progress</div>
+            <div class="vstep-sub" id="vStep1Sub">Assigned to Jose Rizal, RMT · EST. TAT: 4h</div>
+          </div>
+        </li>
+        <li>
+          <div class="vstep-dot dot-pending" id="vDot2"></div>
+          <div>
+            <div class="vstep-title muted" id="vStep2Title">Results ready – pending</div>
+            <div class="vstep-sub" id="vStep2Sub"></div>
+          </div>
+        </li>
+      </ul>
+
+      <div class="vfooter-btns">
+        <button class="vbtn-close" onclick="closeViewModal()">Close</button>
+        <button class="vbtn-complete" id="vBtnComplete" onclick="vMarkComplete()">&#10003; Mark as Completed</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+<script src="cliniq_catalogue.js"></script>
+</body>
+</html>

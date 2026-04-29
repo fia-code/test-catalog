@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CLINIQ - Request Completed</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="cliniq_completed.css"/>
+</head>
+<body>
+
+<div class="top-navbar">
+  <div class="navbar-brand">
+    <img src="logo.png" alt="logo"/>
+    CLINIQ
+  </div>
+  <div class="flex-grow-1 px-2">
+    <div class="search-display"></div>
+  </div>
+</div>
+
+<div class="sidebar">
+  <div class="user-card">
+    <div class="user-avatar">MC</div>
+    <div>
+      <div class="user-name">Curitana, MC</div>
+      <div class="user-role">Lab Administrator</div>
+    </div>
+  </div>
+
+  <span class="nav-section-pill">Overview</span>
+  <a href="#" class="nav-link-item" data-page="Dashboard">
+    <img src="business.png" alt="" style="width:16px;height:16px;"> Dashboard
+  </a>
+
+  <span class="nav-section-pill">Management</span>
+  <a href="#" class="nav-link-item" data-page="Test Catalog">
+    <img src="search.png" alt="" style="width:16px;height:16px;"> Test Catalog
+  </a>
+  <a href="#" class="nav-link-item" data-page="Lab Request">
+    <img src="flask.png" alt="" style="width:16px;height:16px;"> Lab Request
+  </a>
+  <a href="#" class="nav-link-item" data-page="Billing">
+    <img src="invoice.png" alt="" style="width:16px;height:16px;"> Billing
+  </a>
+
+  <span class="nav-section-pill">Reports</span>
+  <a href="#" class="nav-link-item" data-page="Analytics">
+    <img src="analysis.png" alt="" style="width:16px;height:16px;"> Analytics
+  </a>
+
+  <a href="#" class="sign-out-btn" id="signOutBtn">
+    <img src="logout.png" alt="" style="width:16px;height:16px;filter:brightness(0) invert(1);"> Sign Out
+  </a>
+
+  <div class="sidebar-logo-bottom">
+    <img src="logo.png" alt="logo"/>
+  </div>
+</div>
+
+<div class="main-wrapper">
+  <div class="success-card">
+    <img src="check-removebg-preview.png" alt="check" style="width:80px; height:80px; margin-bottom:24px;"/>
+    <div class="success-title">Request Completed!</div>
+    <div class="success-subtitle">
+      #REQ-2026-001 has been marked as <strong>Completed</strong>. Results are now available for download
+    </div>
+    <button class="btn-done" id="doneBtn">Done</button>
+  </div>
+</div>
+
+<div id="signout-modal">
+  <div class="signout-box">
+    <h6>Sign out of CLINIQ?</h6>
+    <p>You'll need to log back in to continue working.</p>
+    <div class="signout-actions">
+      <button class="btn-cancel-signout" id="cancelSignout">Cancel</button>
+      <button class="btn-confirm-signout" id="confirmSignout">Sign Out</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+<script src="cliniq_completed.js"></script>
+</body>
+</html>
